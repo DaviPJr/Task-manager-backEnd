@@ -39,6 +39,28 @@ app.post("/tasks", async (req, res) => {
     }
 });
 
+app.delete("/tasks/:id", async (req, res) => {
+    const taskId = parseInt(req.params.id);
+
+    try {
+        if (isNaN(taskId)) {
+            return res.status(400).send({ error: "ID inválido" });
+        }
+        const deletedTask = await prisma.task.delete({
+            where: {
+                id: taskId,
+            },
+        });
+
+        res.status(200).send(deletedTask);
+    } catch (error) {
+        if (error.code === "P2025") {
+            return res.status(404).send({ error: "Tarefa não encontrada" });
+        }
+        res.status(500).send({ error: error.message });
+    }
+});
+
 app.listen(8000, () => {
     console.log("Listening on port 8000");
 });

@@ -57,6 +57,26 @@ app.post("/tasks", async (req, res) => {
     }
 });
 
+app.patch("/tasks/:id", async (req, res) => {
+    const taskId = parseInt(req.params.id);
+    const updates = req.body;
+    try {
+        const updatedTask = await prisma.task.update({
+            where: {
+                id: taskId,
+            },
+            data: updates,
+        });
+
+        res.status(200).send(updatedTask);
+    } catch (error) {
+        if (error.code === "P2025") {
+            return res.status(404).send({ error: "Tarefa não encontrada" });
+        }
+        res.status(500).send({ error: error.message });
+    }
+});
+
 app.delete("/tasks/:id", async (req, res) => {
     const taskId = parseInt(req.params.id);
 

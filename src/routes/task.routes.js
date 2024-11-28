@@ -1,16 +1,10 @@
 import express from "express";
-import { PrismaClient } from "@prisma/client";
+import TaskController from "../controller/task.controller.js";
 
 const router = express.Router();
-const prisma = new PrismaClient();
 
 router.get("/", async (req, res) => {
-    try {
-        const tasks = await prisma.task.findMany();
-        res.status(200).send(tasks);
-    } catch (error) {
-        res.status(500).send({ error: error.message });
-    }
+    return new TaskController(req, res).getTasks();
 });
 
 router.get("/:id", async (req, res) => {

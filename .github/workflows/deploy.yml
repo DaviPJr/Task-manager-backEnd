@@ -14,4 +14,4 @@ jobs:
               with:
                   heroku_email: "dp.junior1997@gmail.com"
                   heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-                  heroku_app_name: task-manager-davi"
+                  heroku_app_name: "task-manager-davi"

@@ -10,15 +10,27 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
-            - run: |
+
+            # Verificar alterações
+            - name: Check for changes
+              run: |
                   if ! git diff --quiet; then
                     git add -A
                     git commit -m "Added dynamic files"
                   else
-                    echo "No changes to commit"
+                    echo "No changes detected. Skipping commit."
                   fi
-            - uses: CDNievas/heroku-action@v1.0 # This is the action
+
+            # Garantir login na CLI do Heroku
+            - name: Login to Heroku
+              env:
+                  HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+              run: |
+                  echo "$HEROKU_API_KEY" | docker login --username=_ --password-stdin registry.heroku.com
+
+            # Deploy para Heroku
+            - uses: akhileshns/heroku-deploy@v3.12.12
               with:
-                  heroku_email: "dp.junior1997@gmail.com"
                   heroku_api_key: ${{secrets.HEROKU_API_KEY}}
                   heroku_app_name: "task-manager-davi"
+                  heroku_email: "dp.junior1997@gmail.com"

@@ -10,6 +10,13 @@ jobs:
         runs-on: ubuntu-latest
         steps:
             - uses: actions/checkout@v2
+            - run: |
+                  if ! git diff --quiet; then
+                    git add -A
+                    git commit -m "Added dynamic files"
+                  else
+                    echo "No changes to commit"
+                  fi
             - uses: CDNievas/heroku-action@v1.0 # This is the action
               with:
                   heroku_email: "dp.junior1997@gmail.com"

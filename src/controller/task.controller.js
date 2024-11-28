@@ -1,5 +1,6 @@
 import { PrismaClient } from "@prisma/client";
 import { notFoundError } from "../errors/prismadb.errors.js";
+import { handleError } from "../errors/general.errors.js";
 
 const prisma = new PrismaClient();
 
@@ -13,7 +14,7 @@ class TaskController {
             const tasks = await prisma.task.findMany();
             this.res.status(200).send(tasks);
         } catch (error) {
-            this.res.status(500).send({ error: error.message });
+            return handleError(this.res, error);
         }
     }
 
@@ -31,7 +32,7 @@ class TaskController {
             }
             this.res.status(200).send(task);
         } catch (error) {
-            this.res.status(500).send({ error: error.message });
+            return handleError(this.res, error);
         }
     }
 
@@ -52,7 +53,7 @@ class TaskController {
 
             this.res.status(201).send(newTask);
         } catch (error) {
-            this.res.status(500).send({ error: error.message });
+            return handleError(this.res, error);
         }
     }
 
@@ -72,7 +73,7 @@ class TaskController {
             if (error.code === "P2025") {
                 return notFoundError(this.res);
             }
-            this.res.status(500).send({ error: error.message });
+            return handleError(this.res, error);
         }
     }
 
@@ -94,7 +95,7 @@ class TaskController {
             if (error.code === "P2025") {
                 return notFoundError(this.res);
             }
-            this.res.status(500).send({ error: error.message });
+            return handleError(this.res, error);
         }
     }
 }

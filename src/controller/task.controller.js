@@ -1,4 +1,5 @@
 import { PrismaClient } from "@prisma/client";
+import { notFoundError } from "../errors/prismadb.errors.js";
 
 const prisma = new PrismaClient();
 
@@ -26,7 +27,7 @@ class TaskController {
                 },
             });
             if (!task) {
-                return this.res.status(404).send("Tarefa não encontrada!");
+                return notFoundError(this.res);
             }
             this.res.status(200).send(task);
         } catch (error) {
@@ -69,9 +70,7 @@ class TaskController {
             this.res.status(200).send(updatedTask);
         } catch (error) {
             if (error.code === "P2025") {
-                return this.res
-                    .status(404)
-                    .send({ error: "Tarefa não encontrada" });
+                return notFoundError(this.res);
             }
             this.res.status(500).send({ error: error.message });
         }
@@ -93,9 +92,7 @@ class TaskController {
             this.res.status(200).send(deletedTask);
         } catch (error) {
             if (error.code === "P2025") {
-                return this.res
-                    .status(404)
-                    .send({ error: "Tarefa não encontrada" });
+                return notFoundError(this.res);
             }
             this.res.status(500).send({ error: error.message });
         }
